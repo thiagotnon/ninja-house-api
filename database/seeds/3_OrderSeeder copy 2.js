@@ -1,8 +1,8 @@
-'use strict'
+"use strict";
 
 /*
 |--------------------------------------------------------------------------
-| MessageSeeder
+| AlertSeeder
 |--------------------------------------------------------------------------
 |
 | Make use of the Factory instance to seed database with dummy data or
@@ -11,11 +11,18 @@
 */
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
-const Factory = use('Factory')
+const Factory = use("Factory");
+const ALert = use("App/Models/ALert");
 
-class MessageSeeder {
-  async run () {
+class ALertSeeder {
+  async run() {
+    await ALert.createMany([
+      {
+        title: "Aviso Geral",
+        message: "Você recebeu um aviso geral",
+      },
+    ]);
   }
 }
 
-module.exports = MessageSeeder
+module.exports = ALertSeeder;

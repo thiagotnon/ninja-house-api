@@ -4,13 +4,13 @@
 const Model = use("Model");
 const AbstractModel = use("App/Models/AbstractModels");
 
-class Message extends AbstractModel {
+class Alert extends AbstractModel {
   static getRegisterFields() {
-    return ["title", "message", "apartment_id"];
+    return ["title", "message"];
   }
   apartment() {
-    return this.belongsTo("App/Models/Apartment");
+    return this.hasMany("App/Models/Apartment");
   }
 }
 
-module.exports = Message;
+module.exports = Alert;

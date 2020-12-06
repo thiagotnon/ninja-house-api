@@ -15,25 +15,37 @@ class UserController {
     return await User.query().where("id", params.id).first();
   }
   async store({ request }) {
-    const registerFields = [
-      "username",
-      "email",
-      "password",
-      "rg",
-      "cpf",
-      "phone",
-    ];
-    const data = request.only(registerFields);
+    try {
+      const registerFields = [
+        "username",
+        "email",
+        "password",
+        "rg",
+        "cpf",
+        "phone",
+      ];
+      const data = request.only(registerFields);
 
-    return await User.create(data);
+      return await User.create(data);
+    } catch (error) {
+      if (error.sqlMessage.indexOf("users_username_unique")) {
+        return { error: "Usuário já cadastrado" };
+      }
+    }
   }
 
   async token({ request, auth }) {
-    const { email, password } = request.all();
-    const token = await auth.attempt(email, password);
-    return token;
+    try {
+      const { email, password } = request.all();
+      const token = await auth.attempt(email, password);
+      return token;
+    } catch (error) {
+      console.log(error);
+      if (error.toString().indexOf("Cannot find user with email as")) {
+        return { error: "E-mail ou senha inválidos" };
+      }
+    }
   }
-
   async destroy({ params, request, response }) {
     const user = await User.findOrFail(params.id);
     user.delete();

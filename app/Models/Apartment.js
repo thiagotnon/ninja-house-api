@@ -22,9 +22,6 @@ class Apartment extends AbstractModel {
   orders() {
     return this.hasMany("App/Models/Order");
   }
-  messages() {
-    return this.hasMany("App/Models/Message");
-  }
 }
 
 module.exports = Apartment;

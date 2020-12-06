@@ -37,9 +37,16 @@ class ApartmentController {
    * @param {Response} ctx.response
    */
   async store({ request, response }) {
-    const registerFields = Apartment.getRegisterFields();
-    const data = request.only(registerFields);
-    return await Apartment.create(data);
+    try {
+      const registerFields = Apartment.getRegisterFields();
+      const data = request.only(registerFields);
+      return await Apartment.create(data);
+    } catch (error) {
+      console.log(error);
+      if (error.sqlMessage.indexOf("apartments_unit_number_unique")) {
+        return { error: "Essa unidade já existe." };
+      }
+    }
   }
 
   /**
@@ -58,7 +65,6 @@ class ApartmentController {
       .with("guests")
       .with("reservations")
       .with("orders")
-      .with("messages")
       .first();
   }
 

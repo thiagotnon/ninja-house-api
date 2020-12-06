@@ -46,9 +46,9 @@ Route.group(() => {
     .apiOnly()
     .validator(new Map([[["store", "update"], "LeisureSpace"]]));
 
-  Route.resource("/avisos", "MessageController")
+  Route.resource("/mensagens", "AlertController")
     .apiOnly()
-    .validator(new Map([[["store", "update"], "Message"]]));
+    .validator(new Map([[["store", "update"], "Alert"]]));
 
   Route.resource("/encomendas/tipo-de-encomenda", "OrderTypeController")
     .apiOnly()

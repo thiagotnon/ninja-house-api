@@ -3,16 +3,15 @@
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
-
-const Message = use("App/Models/Message");
+const Alert = use("App/Models/Alert");
 
 /**
- * Resourceful controller for interacting with messages
+ * Resourceful controller for interacting with alerts
  */
-class MessageController {
+class AlertController {
   /**
-   * Show a list of all messages.
-   * GET messages
+   * Show a list of all alerts.
+   * GET alerts
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -21,30 +20,30 @@ class MessageController {
    */
   async index({ request, response, view }) {
     const { page, qty, name } = request.all();
-    const query = Message.query();
+    const query = Alert.query();
     if (name) {
-      query.where("name", "like", "%" + name + "%");
+      query.where("name", "like", "%" + name + "%").fetch();
     }
     return await query.paginate(page, qty);
   }
 
   /**
-   * Create/save a new message.
-   * POST messages
+   * Create/save a new alert.
+   * POST alerts
    *
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
   async store({ request, response }) {
-    const registerFields = Message.getRegisterFields();
+    const registerFields = Alert.getRegisterFields();
     const data = request.only(registerFields);
-    return await Message.create(data);
+    return await Alert.create(data);
   }
 
   /**
-   * Display a single message.
-   * GET messages/:id
+   * Display a single alert.
+   * GET alerts/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -52,41 +51,38 @@ class MessageController {
    * @param {View} ctx.view
    */
   async show({ params, request, response, view }) {
-    return await Message.query()
-      .where("id", params.id)
-      .with("apartment")
-      .first();
+    return await Alert.query().where("id", params.id).first();
   }
 
   /**
-   * Update message details.
-   * PUT or PATCH messages/:id
+   * Update alert details.
+   * PUT or PATCH alerts/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
   async update({ params, request, response }) {
-    const message = await Message.findOrFail(params.id);
-    const registerFields = Message.getRegisterFields();
+    const alert = await Alert.findOrFail(params.id);
+    const registerFields = Alert.getRegisterFields();
     const data = request.only(registerFields);
-    message.merge(data);
-    await message.save();
-    return message;
+    alert.merge(data);
+    await alert.save();
+    return alert;
   }
 
   /**
-   * Delete a message with id.
-   * DELETE messages/:id
+   * Delete a alert with id.
+   * DELETE alerts/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
   async destroy({ params, request, response }) {
-    const message = await Message.findOrFail(params.id);
-    message.delete();
+    const alert = await Alert.findOrFail(params.id);
+    alert.delete();
   }
 }
 
-module.exports = MessageController;
+module.exports = AlertController;
