@@ -8,8 +8,8 @@ class ReservationGuestSchema extends Schema {
     this.create("reservation_guests", (table) => {
       table.increments();
       table.string("name", 255).notNullable();
-      table.integer("rg").notNullable().unique();
-      table.string("cpf").notNullable().unique();
+      table.integer("rg").notNullable();
+      table.string("cpf").notNullable();
       table
         .integer("reservation_id")
         .unsigned()

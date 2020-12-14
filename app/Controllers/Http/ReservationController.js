@@ -21,7 +21,7 @@ class ReservationController {
    */
   async index({ request, response, view }) {
     const { page, qty, name } = request.all();
-    const query = Reservation.query();
+    const query = Reservation.query().with("leisure_space");
     if (name) {
       query.where("name", "like", "%" + name + "%");
     }
@@ -37,9 +37,13 @@ class ReservationController {
    * @param {Response} ctx.response
    */
   async store({ request, response }) {
-    const registerFields = Reservation.getRegisterFields();
-    const data = request.only(registerFields);
-    return await Reservation.create(data);
+    try {
+      const registerFields = Reservation.getRegisterFields();
+      const data = request.only(registerFields);
+      return await Reservation.create(data);
+    } catch (error) {
+      return { erro: "erro ao criar" };
+    }
   }
 
   /**
@@ -55,6 +59,7 @@ class ReservationController {
     return await Reservation.query()
       .where("id", params.id)
       .with("guests")
+      .with("leisure_space")
       .first();
   }
 

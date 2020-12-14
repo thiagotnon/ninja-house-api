@@ -21,7 +21,7 @@ class GuestController {
    */
   async index({ request, response, view }) {
     const { page, qty, name } = request.all();
-    const query = Guest.query();
+    const query = Guest.query().with("apartments");
     if (name) {
       query.where("name", "like", "%" + name + "%");
     }
@@ -37,9 +37,18 @@ class GuestController {
    * @param {Response} ctx.response
    */
   async store({ request, response }) {
-    const registerFields = Guest.getRegisterFields();
-    const data = request.only(registerFields);
-    return await Guest.create(data);
+    try {
+      const registerFields = Guest.getRegisterFields();
+      const data = request.only(registerFields);
+      return await Guest.create(data);
+    } catch (error) {
+      if (error.sqlMessage.indexOf("guests_cpf_unique")) {
+        return {
+          error:
+            "Esse hóspede já foi registrado.\nVerifique os dados e tente novamente.",
+        };
+      }
+    }
   }
 
   /**

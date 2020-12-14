@@ -37,6 +37,7 @@ Route.group(() => {
     .validator(new Map([[["store", "update"], "Apartment"]]));
 
   Route.get("/unidade/:id/moradores", "ApartmentController.dwellers");
+  Route.get("/unidade/:id/encomendas", "ApartmentController.orders");
 
   Route.resource("/hospedes", "GuestController")
     .apiOnly()

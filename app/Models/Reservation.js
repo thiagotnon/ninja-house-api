@@ -11,6 +11,9 @@ class Reservation extends AbstractModel {
   guests() {
     return this.hasMany("App/Models/ReservationGuest");
   }
+  leisure_space() {
+    return this.belongsTo("App/Models/LeisureSpace");
+  }
 }
 
 module.exports = Reservation;

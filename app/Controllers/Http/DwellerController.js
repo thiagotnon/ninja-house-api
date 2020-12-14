@@ -5,6 +5,8 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Dweller = use("App/Models/Dweller");
+const Reservation = use("App/Models/Reservation");
+const Apartment = use("App/Models/Apartment");
 
 /**
  * Resourceful controller for interacting with Dwellers
@@ -82,6 +84,9 @@ class DwellerController {
    */
   async destroy({ params, request, response }) {
     const dweller = await Dweller.findOrFail(params.id);
+    const apartments = Apartment.query().where("dweller_id", dweller.id);
+    Reservation.query().whereIn("apartment_id", apartments).delete();
+    apartments.delete();
     dweller.delete();
   }
 }

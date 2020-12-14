@@ -21,7 +21,6 @@ class ImageController {
         types: ["image"],
         size: "2mb",
       });
-      console.log(images);
       await images.moveAll(Helpers.tmpPath("uploads"), (file) => ({
         name: `${Date.now()}-${file.clientName}`,
       }));

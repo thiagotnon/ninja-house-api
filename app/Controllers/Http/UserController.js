@@ -38,7 +38,8 @@ class UserController {
     try {
       const { email, password } = request.all();
       const token = await auth.attempt(email, password);
-      return token;
+      const { username } = await User.query().where("email", email).first();
+      return { ...token, username };
     } catch (error) {
       console.log(error);
       if (error.toString().indexOf("Cannot find user with email as")) {
@@ -47,8 +48,21 @@ class UserController {
     }
   }
   async destroy({ params, request, response }) {
-    const user = await User.findOrFail(params.id);
-    user.delete();
+    try {
+      const user = await User.findOrFail(params.id);
+      user.delete();
+    } catch (error) {
+      if (
+        error.sqlMessage.indexOf(
+          "Cannot delete or update a parent row: a foreign key constraint fails"
+        )
+      ) {
+        return {
+          error:
+            "O usuário não pode ser removido.\nO registro pode estar vinculado a um morador ou funcionário.",
+        };
+      }
+    }
   }
 }
 

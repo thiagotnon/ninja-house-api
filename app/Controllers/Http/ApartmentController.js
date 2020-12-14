@@ -21,7 +21,7 @@ class ApartmentController {
    */
   async index({ request, response, view }) {
     const { page, qty, unit_number } = request.all();
-    const query = Apartment.query();
+    const query = Apartment.query().orderBy("unit_number", "asc");
     if (unit_number) {
       query.where("unit_number", "like", "%" + unit_number + "%").fetch();
     }
@@ -99,8 +99,21 @@ class ApartmentController {
    * @param {Response} ctx.response
    */
   async destroy({ params, request, response }) {
-    const apartment = await Apartment.findOrFail(params.id);
-    apartment.delete();
+    try {
+      const apartment = await Apartment.findOrFail(params.id);
+      apartment.delete();
+    } catch (error) {
+      if (
+        error.sqlMessage.indexOf(
+          "Cannot delete or update a parent row: a foreign key constraint fails"
+        )
+      ) {
+        return {
+          error:
+            "A unidade não pode ser excluída. Existem moradores, mensagens ou reservas vinculados e ela.",
+        };
+      }
+    }
   }
 }
 

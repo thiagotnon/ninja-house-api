@@ -37,9 +37,13 @@ class ReservationGuestController {
    * @param {Response} ctx.response
    */
   async store({ request, response }) {
-    const registerFields = ReservationGuest.getRegisterFields();
-    const data = request.only(registerFields);
-    return await ReservationGuest.create(data);
+    try {
+      const registerFields = ReservationGuest.getRegisterFields();
+      const data = request.only(registerFields);
+      return await ReservationGuest.create(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   /**

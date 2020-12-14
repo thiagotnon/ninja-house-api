@@ -7,7 +7,7 @@ class ReservationSchema extends Schema {
   up() {
     this.create("reservations", (table) => {
       table.increments();
-      table.string("date", 10).notNullable().unique();
+      table.string("date", 10).notNullable();
       table
         .integer("apartment_id")
         .unsigned()
